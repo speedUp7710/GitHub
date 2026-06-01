@@ -1,11 +1,12 @@
-def timer(n):
-    print(n)
-    if n < 1:
-        return
-    timer(n-1)
+import pygame
+pygame.init()
 
-n = int(input())
-timer(n)
+window = pygame.display.set_mode((800, 600))
+background = pygame.image.load('background.png')
+fps = 60
+clock = pygame.time.Clock()
 
-#112334
-#jgjgj
+while True:
+    clock.tick(fps)
+
+    pygame.display.flip()
