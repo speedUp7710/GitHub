@@ -1,11 +1,11 @@
 import sys
-
 import pygame
-
 from classes.Enemy import Enemy
 from classes.Player import Player
 
 pygame.init()
+
+sound_ball = pygame.mixer.Sound('Sounds/effect_ball.mp3')
 
 SCREEN_W, SCREEN_H = 800, 600
 window = pygame.display.set_mode((SCREEN_W, SCREEN_H))
@@ -19,7 +19,7 @@ player2.change_size_factor(0.3)
 player1.reset()
 player2.reset()
 
-ball = Enemy('images/ball.png', 224, 224, 0, 3, (400, 260), end_pos=None)
+ball = Enemy('images/ball.png', 224, 224, 0, 3, (400, 500), end_pos=None)
 ball.change_size_factor(0.3)
 
 win_blue = Enemy('images/win_blue.png', 579, 563, 0, 0, (400, 260), end_pos=None)
@@ -51,10 +51,13 @@ while True:
 
     ball.rect.x += ball.speedx
     ball.rect.y += ball.speedy
-    if ball.collide(player1.rect):
+    if ball.collide(player1.rect) or ball.collide(player2.rect):
+        if player1.rect.centery + 203 < ball.rect.centery or player2.rect.centery + 203 < ball.rect.centery:
+            ball.speedy = -ball.speedy
+        elif player1.rect.centery - 203 > ball.rect.centery or player2.rect.centery - 203 > ball.rect.centery:
+            ball.speedy = ball.speedy
         ball.speedx *= -1
-    if ball.collide(player2.rect):
-        ball.speedx *= -1
+        sound_ball.play()
     if ball.rect.y >= SCREEN_H-35 or ball.rect.y <= 0:
         ball.speedy *= -1
     if ball.rect.x >= SCREEN_W-35:
