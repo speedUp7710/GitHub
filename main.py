@@ -19,9 +19,13 @@ player2.change_size_factor(0.3)
 player1.reset()
 player2.reset()
 
-ball = Enemy('images/ball.png', 224, 224, 0, 5, (300, 200), end_pos=None)
+ball = Enemy('images/ball.png', 224, 224, 0, 3, (400, 260), end_pos=None)
 ball.change_size_factor(0.3)
 
+win_blue = Enemy('images/win_blue.png', 579, 563, 0, 0, (400, 260), end_pos=None)
+win_red = Enemy('images/win_red.png', 685, 642, 0, 0, (400, 260), end_pos=None)
+win_blue.change_size_factor(0.5)
+win_red.change_size_factor(0.5)
 
 fps = 60
 clock = pygame.time.Clock()
@@ -45,9 +49,34 @@ while True:
             pygame.quit()
             sys.exit()
 
+    ball.rect.x += ball.speedx
+    ball.rect.y += ball.speedy
+    if ball.collide(player1.rect):
+        ball.speedx *= -1
+    if ball.collide(player2.rect):
+        ball.speedx *= -1
+    if ball.rect.y >= SCREEN_H-35 or ball.rect.y <= 0:
+        ball.speedy *= -1
+    if ball.rect.x >= SCREEN_W-35:
+        window.blit(win_blue.image, win_blue.rect)
+        break
+    if ball.rect.x <= 0:
+        window.blit(win_red.image, win_red.rect)
+        break
+
     window.blit(background, (0, 0))
     window.blit(player1.image, player1.rect)
     window.blit(player2.image, player2.rect)
     window.blit(ball.image, ball.rect)
+
+    pygame.display.flip()
+
+while True:
+    clock.tick(fps)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
     pygame.display.flip()

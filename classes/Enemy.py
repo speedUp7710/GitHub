@@ -15,6 +15,8 @@ class Enemy(AnimSprite):
         self.pause_duration = 1
         self.is_paused = False
         self.start_time = 0
+        self.speedx = self.speed
+        self.speedy = self.speed
 
     def update(self):
         current_time = time.time()
@@ -42,3 +44,6 @@ class Enemy(AnimSprite):
             self.rect.centery += round(dy / distance * self.speed)
 
         super().update()
+
+    def collide(self, enemy):
+        return self.rect.colliderect(enemy)
