@@ -29,6 +29,7 @@ win_red.change_size_factor(0.5)
 
 fps = 60
 clock = pygame.time.Clock()
+can_collide = True
 
 while True:
     clock.tick(fps)
@@ -51,18 +52,23 @@ while True:
 
     ball.rect.x += ball.speedx
     ball.rect.y += ball.speedy
-    if ball.collide(player1.rect) or ball.collide(player2.rect):
-        if player1.rect.centery + 203 < ball.rect.centery or player2.rect.centery + 203 < ball.rect.centery:
-            ball.speedy = -ball.speedy
-        elif player1.rect.centery - 203 > ball.rect.centery or player2.rect.centery - 203 > ball.rect.centery:
-            ball.speedy = ball.speedy
+    if ball.collide(player2.rect) and can_collide == True:
         ball.speedx *= -1
+        can_collide = False
         sound_ball.play()
+
+    if ball.collide(player1.rect) and can_collide == False:
+        ball.speedx *= -1
+        can_collide = True
+        sound_ball.play()
+
     if ball.rect.y >= SCREEN_H-35 or ball.rect.y <= 0:
         ball.speedy *= -1
+
     if ball.rect.x >= SCREEN_W-35:
         window.blit(win_blue.image, win_blue.rect)
         break
+
     if ball.rect.x <= 0:
         window.blit(win_red.image, win_red.rect)
         break
